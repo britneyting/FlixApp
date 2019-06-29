@@ -19,7 +19,7 @@ The following **optional** features are implemented:
 
 - [ ] User sees an error message when there's a networking error.
 - [x] Movies are displayed using a CollectionView instead of a TableView.
-- [x ] User can search for a movie.
+- [x] User can search for a movie.
 - [ ] All images fade in as they are loading.
 - [ ] User can view the large movie poster by tapping on a cell.
 - [ ] For the large poster, load the low resolution image first and then switch to the high resolution image when complete.
@@ -40,9 +40,9 @@ Please list two areas of the assignment you'd like to **discuss further with you
 
 Here's a walkthrough of implemented user stories:
 
-<img src='http://i.imgur.com/link/to/your/gif/file.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
+<img src='https://media.giphy.com/media/Pmj9oVkXvr7FKhc71m/giphy.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
 
-GIF created with [LiceCap](http://www.cockos.com/licecap/).
+GIF created with [Giphy](http://www.giphy.com).
 
 ## Notes
 
