@@ -11,12 +11,16 @@
 #import "UIImageView+AFNetworking.h"
 #import "DetailsViewController.h"
 
-@interface MovieViewController () <UITableViewDataSource, UITableViewDelegate> // this class implements this protocol. Protocol is a promise that you'll implement the methods inside the brackets. 1st protocol shows table view content, 2nd protocol knows how to respond to table view events (ex: scrolls, selects cell). Need to set rows and sections for 1st, but not 2nd
+@interface MovieViewController () <UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate> // this class implements this protocol. Protocol is a promise that you'll implement the methods inside the brackets. 1st protocol shows table view content, 2nd protocol knows how to respond to table view events (ex: scrolls, selects cell). Need to set rows and sections for 1st, but not 2nd
 
 @property (strong, nonatomic) IBOutlet UITableView *tableView;
 @property (nonatomic, strong) NSArray *movies; // a private variable is declared using this _movies
 @property (nonatomic, strong) UIRefreshControl *refreshControl;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *activityIndicator;
+@property (weak, nonatomic) IBOutlet UISearchBar *searchBar;
+@property (strong, nonatomic) NSArray *data;
+@property (strong, nonatomic) NSArray *filteredData;
+
 
 @end
 
@@ -30,6 +34,7 @@
     
     self.tableView.dataSource = self;
     self.tableView.delegate = self;
+    self.searchBar.delegate = self;
     
     [self fetchMovies];
     
@@ -63,6 +68,9 @@
             
             self.movies = dataDictionary[@"results"]; //accessing keys of dictionary using this syntax -- the key in this case is "results". Put the value of that key into an array.
             
+            self.data = self.movies;
+            self.filteredData = self.data;
+            
             // for each dictionary (variable name = movie) in the array movies, print out the value of the key (key = 'title' in this case)
             for (NSDictionary *movie in self.movies) { // need to declare the variable type
                 NSLog(@"%@", movie[@"title"]);
@@ -83,7 +91,7 @@
 // tells you how many rows you have
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:
     (NSInteger)section {
-    return self.movies.count; // 20 cells
+    return self.filteredData.count; // 20 cells
 }
 
 // configures cell based on diff index path
@@ -93,7 +101,7 @@
     
     NSLog(@"%@", [NSString stringWithFormat:@"row: %d, section %d", indexPath.row, indexPath.section]);
     
-    NSDictionary *movie = self.movies[indexPath.row];
+    NSDictionary *movie = self.filteredData[indexPath.row];
     cell.titleLabel.text = movie[@"title"]; // for each cell, sets title to whatever's in the API under 'title'
     cell.synopsisLabel.text = movie[@"overview"]; // for each cell, sets synopsis to whatever's in the API under 'overview'
     
@@ -110,7 +118,25 @@
     return cell;
 }
 
+- (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText {
     
+    if (searchText.length != 0) {
+        
+        NSPredicate *predicate = [NSPredicate predicateWithBlock:^BOOL(NSDictionary *evaluatedObject, NSDictionary *bindings) {
+            return [evaluatedObject[@"title"] containsString:searchText];
+        }];
+        self.filteredData = [self.data filteredArrayUsingPredicate:predicate];
+        
+        NSLog(@"%@", self.filteredData);
+        
+    }
+    else {
+        self.filteredData = self.data;
+    }
+    
+    [self.tableView reloadData];
+    
+}
 
 
 #pragma mark - Navigation
